@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlRoot">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SETU — Government-Startup Procurement Register</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<a href="#mainContent" class="skip-link" data-i18n="skipLink">Skip to main content</a>
+
+<!-- ============ ACCESSIBILITY BAR ============ -->
+<div class="access-bar">
+  <div class="wrap access-inner">
+    <div class="access-left">
+      <span data-i18n="govOfIndia">Government of Maharashtra Initiative</span>
+      <span class="access-date" id="todayDate"></span>
+    </div>
+    <div class="access-right">
+      <span class="access-label" data-i18n="textSize">Text size</span>
+      <button class="access-btn" id="fontDecrease" aria-label="Decrease text size">A-</button>
+      <button class="access-btn" id="fontReset" aria-label="Reset text size">A</button>
+      <button class="access-btn" id="fontIncrease" aria-label="Increase text size">A+</button>
+      <button class="access-btn" id="contrastToggle" data-i18n="highContrast">High contrast</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ UTILITY BAR ============ -->
+<div class="utility-bar">
+  <div class="wrap utility-inner">
+    <span data-i18n="deptLine">Skills, Employment, Entrepreneurship &amp; Innovation Department</span>
+    <div class="utility-right">
+      <select id="langSwitch" class="lang-switch" aria-label="Select language">
+        <option value="en">English</option>
+        <option value="hi">हिन्दी</option>
+        <option value="mr">मराठी</option>
+      </select>
+      <span id="sessionLabel" class="session-label" data-i18n="notSignedIn">Not signed in</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="wrap header-inner">
+    <div class="brand">
+      <div class="emblem" aria-hidden="true">
+        <svg viewBox="0 0 48 48" width="42" height="42">
+          <circle cx="24" cy="24" r="22" fill="none" stroke="#14213D" stroke-width="2"/>
+          <circle cx="24" cy="24" r="3" fill="#14213D"/>
+          <g stroke="#14213D" stroke-width="1.4">
+            <line x1="24" y1="24" x2="24" y2="4"/><line x1="24" y1="24" x2="24" y2="44"/>
+            <line x1="24" y1="24" x2="4" y2="24"/><line x1="24" y1="24" x2="44" y2="24"/>
+            <line x1="24" y1="24" x2="9.5" y2="9.5"/><line x1="24" y1="24" x2="38.5" y2="38.5"/>
+            <line x1="24" y1="24" x2="9.5" y2="38.5"/><line x1="24" y1="24" x2="38.5" y2="9.5"/>
+          </g>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name">SETU</div>
+        <div class="brand-sub" data-i18n="brandSub">Startup Enabled Transparent Upgradation</div>
+      </div>
+    </div>
+    <nav class="main-nav" id="mainNav">
+      <button class="nav-link active" data-page="home" data-i18n="navHome">Home</button>
+      <button class="nav-link" data-page="gov" data-i18n="navGov">Government Desk</button>
+      <button class="nav-link" data-page="startup" data-i18n="navStartup">Startup Desk</button>
+      <button class="nav-link" data-page="leaderboard" data-i18n="navLeaderboard">Leaderboard</button>
+      <button class="nav-link" data-page="finance" data-i18n="navFinance">Finance</button>
+      <button class="nav-link" data-page="feedback" data-i18n="navFeedback">Feedback</button>
+    </nav>
+    <button class="btn-outline" id="authButton" data-i18n="signIn">Sign in</button>
+  </div>
+  <div class="tricolor-line"></div>
+</header>
+
+<main id="mainContent">
+
+<!-- ============ HOME ============ -->
+<section id="page-home" class="page active">
+
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <div class="hero-text">
+        <span class="eyebrow" data-i18n="eyebrow">Problem Statement 26136 · Smart India Hackathon 2026</span>
+        <h1 data-i18n="heroTitle">One register connecting government challenges with verified startup solutions.</h1>
+        <p class="hero-lede" data-i18n="heroLede">AI-matched recommendations, risk-scored profiles, a public leaderboard, milestone-based finance tracking, and feedback that keeps improving every match.</p>
+        <div class="hero-actions">
+          <button class="btn-primary" data-goto="gov" data-i18n="fileProblem">File a problem statement</button>
+          <button class="btn-secondary" data-goto="startup" data-i18n="registerStartup">Register your startup</button>
+        </div>
+      </div>
+      <dl class="stat-strip" id="statStrip">
+        <div class="stat"><dt data-i18n="statRegistered">Registered startups</dt><dd id="statCount">—</dd></div>
+        <div class="stat"><dt data-i18n="statTopScore">Top score today</dt><dd id="statTop">—</dd></div>
+        <div class="stat"><dt data-i18n="statStatus">System status</dt><dd id="statHealth" data-i18n="checking">checking…</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ANNOUNCEMENTS -->
+  <section class="announce-band wrap">
+    <div class="announce-label">
+      <span class="announce-dot"></span>
+      <strong data-i18n="announceLabel">Announcements</strong>
+    </div>
+    <ul class="announce-list">
+      <li><span class="announce-date">28 Aug 2026</span> <span data-i18n="announce1">Water &amp; Sanitation Department opens 3 new problem statements for pilot bidding.</span></li>
+      <li><span class="announce-date">14 Aug 2026</span> <span data-i18n="announce2">DPIIT eligibility relaxation now applies automatically at registration.</span></li>
+      <li><span class="announce-date">02 Aug 2026</span> <span data-i18n="announce3">Average milestone payment time improved to 21 days this quarter.</span></li>
+    </ul>
+  </section>
+
+  <section class="workflow wrap">
+    <h2 class="section-title" data-i18n="workflowTitle">How SETU works</h2>
+    <p class="section-sub" data-i18n="workflowSub">A four-stage pipeline, each stage backed by its own module.</p>
+
+    <div class="workflow-grid">
+      <div class="workflow-card">
+        <div class="workflow-num">01</div>
+        <h3 data-i18n="wf1Title">AI matching &amp; risk prediction</h3>
+        <p data-i18n="wf1Body">The problem statement is read by the matching engine, which ranks registered startups by skill-fit and pairs each match with a live risk score — track record, profile strength, and compliance standing, not a black box.</p>
+      </div>
+      <div class="workflow-card">
+        <div class="workflow-num">02</div>
+        <h3 data-i18n="wf2Title">Verified startup database</h3>
+        <p data-i18n="wf2Body">Every startup keeps a public profile — specialisation, achievements, DPIIT status, verification badge — that both the matching and scoring engines read from directly.</p>
+      </div>
+      <div class="workflow-card">
+        <div class="workflow-num">03</div>
+        <h3 data-i18n="wf3Title">Transparent scoring &amp; leaderboard</h3>
+        <p data-i18n="wf3Body">A weighted, explainable formula (policy fit, profile strength, past feedback) ranks every startup on a public leaderboard — no hidden criteria.</p>
+      </div>
+      <div class="workflow-card">
+        <div class="workflow-num">04</div>
+        <h3 data-i18n="wf4Title">Finance tracking &amp; feedback loop</h3>
+        <p data-i18n="wf4Body">Once a startup is selected, a 4-milestone contract tracks scope and funds through to payment. Feedback after completion flows straight back into that startup's score for the next match.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMPACT STATS -->
+  <section class="impact wrap">
+    <h2 class="section-title" data-i18n="impactTitle">Impact so far</h2>
+    <div class="impact-grid">
+      <div class="impact-card"><div class="impact-num">21</div><div class="impact-label" data-i18n="impact1">Avg. days to first payment</div></div>
+      <div class="impact-card"><div class="impact-num">6</div><div class="impact-label" data-i18n="impact2">Departments onboarded</div></div>
+      <div class="impact-card"><div class="impact-num">100%</div><div class="impact-label" data-i18n="impact3">Milestone-tracked disbursal</div></div>
+      <div class="impact-card"><div class="impact-num">0</div><div class="impact-label" data-i18n="impact4">Turnover-clause rejections</div></div>
+    </div>
+  </section>
+
+  <!-- PARTICIPATING DEPARTMENTS -->
+  <section class="departments wrap">
+    <h2 class="section-title" data-i18n="deptsTitle">Participating departments</h2>
+    <div class="dept-badges">
+      <span class="dept-badge" data-i18n="deptTransport">Urban Transport</span>
+      <span class="dept-badge" data-i18n="deptHealth">Public Health</span>
+      <span class="dept-badge" data-i18n="deptWater">Water &amp; Sanitation</span>
+      <span class="dept-badge" data-i18n="deptEdu">Education</span>
+      <span class="dept-badge" data-i18n="deptAgri">Agriculture</span>
+      <span class="dept-badge" data-i18n="deptInnovation">Skills, Employment &amp; Innovation</span>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq wrap">
+    <h2 class="section-title" data-i18n="faqTitle">Frequently asked questions</h2>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary data-i18n="faq1q">Who is eligible to register as a startup?</summary>
+        <p data-i18n="faq1a">Any DPIIT-recognised startup, or one in the process of recognition, may register. DPIIT recognition removes the usual prior-turnover and past-experience requirements for pilot-stage engagements.</p>
+      </details>
+      <details class="faq-item">
+        <summary data-i18n="faq2q">How is the match score calculated?</summary>
+        <p data-i18n="faq2a">The matching engine compares the skills a problem statement needs against each startup's declared tags. It's a transparent overlap score, not a hidden model — you can see exactly which terms matched.</p>
+      </details>
+      <details class="faq-item">
+        <summary data-i18n="faq3q">What happens if a milestone is missed?</summary>
+        <p data-i18n="faq3a">Funds for a milestone are only released once it is marked delivered and verified. A missed milestone simply withholds that tranche — it does not cancel earlier approved payments.</p>
+      </details>
+      <details class="faq-item">
+        <summary data-i18n="faq4q">Is my startup's data secure?</summary>
+        <p data-i18n="faq4a">Passwords are hashed and never stored in plain text, and every session uses a unique, expiring access token. See the Feedback and Finance pages for how pilot outcomes are recorded transparently.</p>
+      </details>
+    </div>
+  </section>
+
+</section>
+
+<!-- ============ GOVERNMENT DESK ============ -->
+<section id="page-gov" class="page">
+  <div class="wrap page-head">
+    <h1 data-i18n="govDeskTitle">Government Desk</h1>
+    <p data-i18n="govDeskSub">File a problem statement to get AI-ranked, risk-scored startup recommendations.</p>
+  </div>
+
+  <div class="wrap panel-grid">
+    <div class="panel form-panel">
+      <h2 data-i18n="fileProblemTitle">File a problem statement</h2>
+      <form id="problemForm">
+        <label data-i18n="labelTitle">Title
+          <input type="text" id="probTitle" value="Reduce traffic congestion at high-density junctions" required>
+        </label>
+        <label data-i18n="labelDept">Department
+          <select id="probDept">
+            <option data-i18n="deptTransport">Urban Transport</option>
+            <option data-i18n="deptHealth">Public Health</option>
+            <option data-i18n="deptWater">Water &amp; Sanitation</option>
+            <option data-i18n="deptEdu">Education</option>
+            <option data-i18n="deptAgri">Agriculture</option>
+          </select>
+        </label>
+        <label data-i18n="labelSkills">Skills / domain needed
+          <textarea id="probSkills" rows="3" required>computer vision, traffic sensors, IoT, real-time analytics, mobile app</textarea>
+        </label>
+        <label data-i18n="labelBudget">Pilot budget ceiling (₹ lakh)
+          <input type="number" id="probBudget" value="25">
+        </label>
+        <button type="submit" class="btn-primary full" data-i18n="getRecommendations">Get AI recommendations</button>
+      </form>
+    </div>
+
+    <div class="panel results-panel">
+      <div class="panel-head-row">
+        <h2 data-i18n="rankedMatches">AI-ranked matches</h2>
+        <span class="count-pill" id="matchCount">—</span>
+      </div>
+      <ol id="matchList" class="match-list">
+        <li class="empty-state" data-i18n="matchEmpty">File a problem statement to see AI-matched, risk-scored startups here.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STARTUP DESK ============ -->
+<section id="page-startup" class="page">
+  <div class="wrap page-head">
+    <h1 data-i18n="startupDeskTitle">Startup Desk</h1>
+    <p data-i18n="startupDeskSub">Register your profile, track your live score, and see how it's calculated.</p>
+  </div>
+
+  <div class="wrap panel-grid" id="startupGuestView">
+    <div class="panel form-panel">
+      <h2 data-i18n="registerTitle">Register your startup</h2>
+      <form id="startupForm">
+        <label data-i18n="labelStartupName">Startup name
+          <input type="text" id="suName" placeholder="e.g. Trafica Systems" required>
+        </label>
+        <label data-i18n="labelEmail">Email
+          <input type="email" id="suEmail" placeholder="you@startup.com" required>
+        </label>
+        <label data-i18n="labelPassword">Password
+          <input type="password" id="suPassword" placeholder="Create a password" required minlength="6">
+        </label>
+        <label data-i18n="labelTags">Specialisation / tags <span class="hint" data-i18n="hintCommaSep">(comma separated)</span>
+          <input type="text" id="suTags" placeholder="computer vision, IoT, traffic sensors" required>
+        </label>
+        <label data-i18n="labelAchievements">Achievements / past work
+          <textarea id="suAchievements" rows="2" placeholder="What have you built or piloted so far?"></textarea>
+        </label>
+        <div class="checkbox-row">
+          <label class="checkbox"><input type="checkbox" id="suDpiit"> <span data-i18n="dpiitCert">DPIIT recognised</span></label>
+          <label class="checkbox"><input type="checkbox" id="suWomen"> <span data-i18n="womenLed">Women-led</span></label>
+        </div>
+        <label data-i18n="labelState">State
+          <select id="suState">
+            <option>Maharashtra</option><option>Karnataka</option><option>Delhi</option>
+            <option>Gujarat</option><option>Tamil Nadu</option><option>Rajasthan</option>
+          </select>
+        </label>
+        <button type="submit" class="btn-primary full" data-i18n="registerBtn">Register</button>
+      </form>
+      <p class="switch-line"><span data-i18n="alreadyRegistered">Already registered?</span> <button class="link-btn" id="showStartupLogin" data-i18n="signInInstead">Sign in instead</button></p>
+    </div>
+
+    <div class="panel form-panel" id="startupLoginPanel" style="display:none;">
+      <h2 data-i18n="signInTitle">Sign in to your startup account</h2>
+      <form id="startupLoginForm">
+        <label data-i18n="labelEmail">Email <input type="email" id="suLoginEmail" required></label>
+        <label data-i18n="labelPassword">Password <input type="password" id="suLoginPassword" required></label>
+        <button type="submit" class="btn-primary full" data-i18n="signIn">Sign in</button>
+      </form>
+      <p class="switch-line"><span data-i18n="demoLogin">Demo login:</span> <code>contact@trafica.demo</code> / <code>Demo@123</code></p>
+      <p class="switch-line"><span data-i18n="newHere">New here?</span> <button class="link-btn" id="showStartupRegister" data-i18n="registerInstead">Register instead</button></p>
+    </div>
+  </div>
+
+  <div class="wrap" id="startupDashboard" style="display:none;">
+    <div class="panel-grid">
+      <div class="panel score-panel">
+        <div class="profile-header">
+          <div class="avatar" id="ownAvatar"></div>
+          <div>
+            <h2 id="ownName">—</h2>
+            <span class="badge-verify" id="ownVerify">pending</span>
+          </div>
+        </div>
+        <div class="score-total"><span id="scoreTotal">—</span><span class="score-total-label">/ 100</span></div>
+        <div class="risk-line"><span data-i18n="pilotRisk">Pilot risk:</span> <span id="ownRiskBadge" class="risk-badge">—</span></div>
+        <div class="score-bars" id="scoreBars"></div>
+      </div>
+
+      <div class="panel">
+        <h2 data-i18n="feedbackHistoryTitle">Feedback history</h2>
+        <div id="ownFeedbackHistory" class="feedback-history">
+          <p class="empty-state" data-i18n="noFeedbackYet">No feedback recorded yet — this fills in after your first completed pilot.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LEADERBOARD ============ -->
+<section id="page-leaderboard" class="page">
+  <div class="wrap page-head">
+    <h1 data-i18n="leaderboardTitle">Statewide Leaderboard</h1>
+    <p data-i18n="leaderboardSub">Score = policy fit (40%) + profile strength (30%) + past feedback (30%). Fully explainable — click any startup to see its full profile.</p>
+  </div>
+  <div class="wrap">
+    <div id="leaderboardCards" class="leaderboard-cards"></div>
+  </div>
+</section>
+
+<!-- ============ FINANCE ============ -->
+<section id="page-finance" class="page">
+  <div class="wrap page-head">
+    <h1 data-i18n="financeTitle">Finance Management</h1>
+    <p data-i18n="financeSub">Milestone-based contract tracking — no funds move until a milestone is marked delivered.</p>
+  </div>
+
+  <div class="wrap panel-grid">
+    <div class="panel form-panel">
+      <h2 data-i18n="createContract">Create a pilot contract</h2>
+      <form id="contractForm">
+        <label data-i18n="labelStartupId">Startup ID <input type="number" id="cStartupId" placeholder="e.g. 1" required></label>
+        <label data-i18n="labelProblemTitle">Problem title <input type="text" id="cTitle" placeholder="e.g. Traffic congestion pilot" required></label>
+        <label data-i18n="labelDeptText">Department <input type="text" id="cDept" placeholder="e.g. Urban Transport" required></label>
+        <label data-i18n="labelTotalBudget">Total budget (₹ lakh) <input type="number" id="cBudget" value="25" required></label>
+        <button type="submit" class="btn-primary full" data-i18n="createContractBtn">Create contract</button>
+      </form>
+    </div>
+    <div class="panel">
+      <h2 data-i18n="viewContract">View contract</h2>
+      <label data-i18n="labelContractId">Contract ID <input type="number" id="viewContractId" placeholder="e.g. 1"></label>
+      <button class="btn-secondary full" id="loadContractBtn" data-i18n="loadMilestones">Load milestones</button>
+      <div id="milestoneTrack" class="milestones"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEEDBACK ============ -->
+<section id="page-feedback" class="page">
+  <div class="wrap page-head">
+    <h1 data-i18n="feedbackPageTitle">Feedback for Future Matching</h1>
+    <p data-i18n="feedbackPageSub">Feedback submitted here updates the startup's score immediately, improving future AI recommendations.</p>
+  </div>
+  <div class="wrap panel-grid">
+    <div class="panel form-panel">
+      <h2 data-i18n="submitFeedback">Submit feedback</h2>
+      <form id="feedbackForm">
+        <label data-i18n="labelStartupId">Startup ID <input type="number" id="fbStartupId" placeholder="e.g. 1" required></label>
+        <label data-i18n="labelContractIdOpt">Contract ID <span class="hint" data-i18n="hintOptional">(optional)</span><input type="number" id="fbContractId" placeholder="e.g. 1"></label>
+        <label data-i18n="labelRating">Rating <span class="hint" data-i18n="hintOutOf10">(out of 10)</span><input type="number" id="fbRating" min="0" max="10" step="0.1" value="8.5" required></label>
+        <label data-i18n="labelComment">Comment <textarea id="fbComment" rows="2" placeholder="What went well or what needs improvement?"></textarea></label>
+        <button type="submit" class="btn-primary full" data-i18n="submitFeedbackBtn">Submit feedback</button>
+      </form>
+    </div>
+    <div class="panel">
+      <h2 data-i18n="viewFeedbackHistory">View feedback history</h2>
+      <label data-i18n="labelStartupId">Startup ID <input type="number" id="viewFbStartupId" placeholder="e.g. 1"></label>
+      <button class="btn-secondary full" id="loadFeedbackBtn" data-i18n="loadHistory">Load history</button>
+      <div id="feedbackHistoryList" class="feedback-history"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ PROFILE MODAL ============ -->
+<div id="profileModal" class="modal-overlay">
+  <div class="modal">
+    <button class="modal-close" id="closeModal">&times;</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- ============ AUTH MODAL ============ -->
+<div id="authModal" class="modal-overlay">
+  <div class="modal modal-narrow">
+    <button class="modal-close" id="closeAuthModal">&times;</button>
+    <h2 data-i18n="signInTitle2">Sign in</h2>
+    <p class="panel-note" data-i18n="chooseDesk">Choose which desk you're signing in to.</p>
+    <div class="auth-choice">
+      <button class="btn-secondary" data-goto="startup" data-i18n="startupSignIn">Startup sign in</button>
+      <button class="btn-secondary" id="govSignInBtn" data-i18n="govSignIn">Government sign in</button>
+    </div>
+    <div id="govLoginArea" style="display:none; margin-top:18px;">
+      <form id="govLoginForm">
+        <label data-i18n="labelEmail">Email <input type="email" id="govLoginEmail" required></label>
+        <label data-i18n="labelPassword">Password <input type="password" id="govLoginPassword" required></label>
+        <button type="submit" class="btn-primary full" data-i18n="signIn">Sign in</button>
+      </form>
+      <p class="switch-line"><span data-i18n="demoLogin">Demo login:</span> <code>officer@maharashtra.gov.demo</code> / <code>Gov@123</code></p>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <div class="brand-name" style="font-size:18px;">SETU</div>
+      <p data-i18n="footerText">Smart India Hackathon 2026, Problem Statement 26136. All data on this page is read from and written to live backend modules via core-apis.</p>
+    </div>
+    <div>
+      <strong data-i18n="footerContact">Contact</strong>
+      <p>Maharashtra State Innovation Society<br>Skills, Employment, Entrepreneurship &amp; Innovation Dept.</p>
+    </div>
+    <div>
+      <strong data-i18n="footerLinks">Quick links</strong>
+      <p><button class="link-btn" data-goto="leaderboard" data-i18n="navLeaderboard">Leaderboard</button></p>
+      <p><button class="link-btn" data-goto="gov" data-i18n="navGov">Government Desk</button></p>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
