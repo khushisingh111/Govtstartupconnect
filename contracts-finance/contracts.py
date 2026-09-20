@@ -8,16 +8,43 @@ needs (actual disbursal happens through PFMS in the real system).
 
 from datetime import datetime
 
+ACTIVE_STATUSES = ["planned", "in_progress", "delivered"]  # not yet "paid"/closed
+
+
+def has_active_pilot(db, startup_id: int) -> bool:
+    """
+    Checks whether a startup is already running an active pilot with ANY
+    department. Used to stop two departments from selecting the same
+    startup for a pilot at the same time — a gap flagged during review.
+    """
+    from models import Contract, Milestone
+
+    contract_ids = [c.id for c in db.query(Contract).filter(Contract.startup_id == startup_id).all()]
+    if not contract_ids:
+        return False
+
+    active_milestone = (
+        db.query(Milestone)
+        .filter(Milestone.contract_id.in_(contract_ids), Milestone.status.in_(ACTIVE_STATUSES))
+        .first()
+    )
+    return active_milestone is not None
+
 
 def create_contract(db, startup_id: int, problem_title: str, department: str, total_budget: float):
     from models import Contract, Milestone
+
+    if has_active_pilot(db, startup_id):
+        raise ValueError(
+            "This startup already has an active pilot in progress with another department. "
+            "A startup can only run one active pilot at a time."
+        )
 
     contract = Contract(startup_id=startup_id, problem_title=problem_title, department=department)
     db.add(contract)
     db.commit()
     db.refresh(contract)
 
-    # Split the budget into 4 even milestones with standard scopes
     scopes = [
         "Prototype / demo ready",
         "Deployed at pilot site",
