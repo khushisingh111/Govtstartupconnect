@@ -162,6 +162,16 @@ form textarea { resize: vertical; }
 .match-score { font-family: "IBM Plex Mono", monospace; font-weight: 600; color: var(--green); font-size: 15px; }
 .empty-state { color: var(--ink-soft); font-size: 13.5px; font-style: italic; padding: 10px 0; }
 
+
+/* ---------- Semantic discovery cards ---------- */
+.semantic-match-card { align-items: start; }
+.match-main { min-width: 0; }
+.match-meta { font-size: 12px; color: var(--ink-soft); margin-top: 3px; }
+.match-reason-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-top: 9px; color: var(--navy); }
+.match-evidence { font-size: 11.5px; color: var(--ink-soft); margin-top: 7px; }
+.mini-score { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--ink-soft); }
+.semantic-match-card .badge-verify { margin-left: 5px; vertical-align: middle; }
+
 /* ---------- Avatars (company "logos") ---------- */
 .avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: "Fraunces", serif; font-weight: 700; font-size: 16px; color: var(--white); flex-shrink: 0; }
 

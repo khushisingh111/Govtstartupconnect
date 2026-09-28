@@ -52,7 +52,13 @@ def startup_event():
 class ProblemIn(BaseModel):
     title: str
     department: str
-    skills_needed: str
+    skills_needed: str = ""
+    problem_context: str = ""
+    desired_outcome: str = ""
+    capabilities_needed: str = ""
+    kpis: str = ""
+    sector: str = ""
+    geography: str = "Maharashtra"
     budget_lakh: float = 25.0
 
 
@@ -118,7 +124,19 @@ def require_session(db: Session, authorization: Optional[str]):
 # ---------------------------------------------------------------- Health
 @app.get("/api/health")
 def health():
-    return {"status": "SETU core-apis running"}
+    # Do not make health checks depend on model download. Report configured model
+    # and whether the semantic engine package is available.
+    try:
+        from semantic_matcher import get_model
+        model = get_model()
+        engine = "SBERT" if model != "TF_IDF_FALLBACK" and hasattr(model, "encode") else "TF-IDF fallback"
+    except Exception:
+        engine = "unavailable"
+    return {
+        "status": "SETU core-apis running",
+        "matching_engine": engine,
+        "model": os.getenv("SBERT_MODEL_NAME", "all-MiniLM-L6-v2"),
+    }
 
 
 # ---------------------------------------------------------------- Auth: Startup
@@ -232,12 +250,28 @@ def get_profile(startup_id: int, db: Session = Depends(get_db)):
     return {
         "startup_id": startup.id,
         "name": startup.name,
+        "legal_name": startup.legal_name,
+        "description": startup.description,
+        "capabilities": startup.capabilities,
+        "products": startup.products,
+        "technology_tags": startup.technology_tags,
         "tags": startup.tags,
         "achievements": startup.achievements,
+        "past_deployments": startup.past_deployments,
+        "past_deployments_count": startup.past_deployments_count,
+        "sector": startup.sector,
+        "industry": startup.industry,
+        "maturity_level": startup.maturity_level,
+        "location": startup.location,
+        "city": startup.city,
         "state": startup.state,
+        "dpiit_status": startup.dpiit_status,
+        "dpiit_number": startup.dpiit_number,
         "is_dpiit_certified": startup.is_dpiit_certified,
         "is_women_led": startup.is_women_led,
         "verification_status": startup.verification_status,
+        "verified_evidence_count": startup.verified_evidence_count,
+        "source": startup.source,
         "score": startup.current_score,
         "risk": scoring.calculate_risk(db, startup),
         "feedback_count": len(feedback_history),
@@ -270,9 +304,21 @@ def leaderboard(limit: int = 20, db: Session = Depends(get_db)):
 # ---------------------------------------------------------------- AI Matching (+ risk)
 @app.post("/api/match-startups")
 def match_startups(payload: ProblemIn, db: Session = Depends(get_db)):
+    """Problem-first semantic discovery. The complete challenge is sent to the
+    matcher; generic terms such as 'mobile app' cannot replace the domain need."""
     all_startups = db.query(Startup).all()
-    problem_text = f"{payload.title} {payload.skills_needed}"
-    ranked = matching.match_startups(problem_text, all_startups, top_n=20)
+    challenge = {
+        "title": payload.title,
+        "department": payload.department,
+        "problem_context": payload.problem_context,
+        "desired_outcome": payload.desired_outcome,
+        "capabilities_needed": payload.capabilities_needed,
+        "skills_needed": payload.skills_needed,
+        "kpis": payload.kpis,
+        "sector": payload.sector or payload.department,
+        "geography": payload.geography,
+    }
+    ranked = matching.match_challenge_comprehensive(challenge, all_startups, top_n=20)
 
     by_id = {s.id: s for s in all_startups}
     for r in ranked:
@@ -282,8 +328,13 @@ def match_startups(payload: ProblemIn, db: Session = Depends(get_db)):
             r["risk_level"] = risk["risk_level"]
             r["risk_score"] = risk["risk_score"]
             r["verification_status"] = startup.verification_status
+            r["setu_score"] = startup.current_score
 
-    return {"problem": payload.title, "matches": ranked}
+    return {
+        "problem": payload.title,
+        "matching_method": "SBERT semantic + capability + sector hybrid",
+        "matches": ranked,
+    }
 
 
 # ---------------------------------------------------------------- Feedback

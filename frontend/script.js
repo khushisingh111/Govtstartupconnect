@@ -113,7 +113,7 @@ async function loadLeaderboard() {
         <div class="lb-rank">#${i + 1}</div>
         ${avatarHtml(s.name, 44)}
         <div>
-          <div class="lb-name">${s.name} ${s.is_dpiit_certified ? "· DPIIT" : ""}</div>
+          <div class="lb-name">${s.name} ${s.is_dpiit_certified ? "· DPIIT demo-verified" : ""}</div>
           <div class="lb-tags">${s.tags.split(",").slice(0, 3).join(", ")} · ${s.state}</div>
         </div>
         ${riskBadgeHtml(s.risk_level)}
@@ -141,21 +141,25 @@ async function showProfile(startupId) {
         <div>
           <h2>${p.name}</h2>
           <span class="badge-verify ${p.verification_status}">${p.verification_status}</span>
-          ${p.is_dpiit_certified ? '<span class="badge-verify verified">DPIIT</span>' : ""}
+          ${p.is_dpiit_certified ? '<span class="badge-verify verified">✓ DPIIT verified · demo source</span>' : '<span class="badge-verify">DPIIT not verified</span>'}
           ${p.is_women_led ? '<span class="badge-verify verified">Women-led</span>' : ""}
         </div>
       </div>
-      <p style="font-size:13px; color:var(--ink-soft); margin:14px 0;">${p.tags}</p>
-      <p style="font-size:13.5px;">${p.achievements || "No achievements listed yet."}</p>
-      <div class="score-total" style="font-size:34px; margin-top:16px;">${p.score.toFixed(1)}<span class="score-total-label">/100</span></div>
+      <p style="font-size:13.5px; margin:14px 0;">${p.description || "No company description provided."}</p>
+      <div class="match-meta">${p.sector || 'Unspecified sector'} · ${p.location || 'Location not provided'} · ${p.maturity_level || 'Maturity not provided'}</div>
+      <h3 style="font-size:15px; margin-top:18px;">Capabilities</h3>
+      <p style="font-size:13px; color:var(--ink-soft);">${p.capabilities || p.tags || '—'}</p>
+      <h3 style="font-size:15px; margin-top:18px;">Past deployments</h3>
+      <p style="font-size:13px;">${p.past_deployments || p.achievements || 'No deployments listed.'}</p>
+      <div class="score-total" style="font-size:34px; margin-top:16px;">${p.score.toFixed(1)}<span class="score-total-label">/100 SETU Score</span></div>
       <div class="risk-line">Pilot risk: ${riskBadgeHtml(p.risk.risk_level)} <span style="color:var(--ink-soft);">(${p.risk.risk_score}/100)</span></div>
+      <p style="font-size:12.5px; color:var(--ink-soft);">Verified evidence: ${p.verified_evidence_count || 0} · Past contracts: ${p.past_contracts}</p>
       <h3 style="font-size:15px; margin-top:20px;">Feedback history (${p.feedback_count})</h3>
       <div class="feedback-history">
         ${p.feedback_history.length ? p.feedback_history.map(f => `
           <div class="feedback-row"><span>${f.date}</span><span class="feedback-rating">${f.rating}/10</span></div>
         `).join("") : '<p class="empty-state">No pilots completed yet.</p>'}
       </div>
-      <p style="font-size:12.5px; color:var(--ink-soft); margin-top:14px;">Past contracts: ${p.past_contracts}</p>
     `;
   } catch (e) {
     modalContent.innerHTML = `<p class="empty-state">Could not load this profile.</p>`;
@@ -167,7 +171,13 @@ document.getElementById("problemForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const title = document.getElementById("probTitle").value;
   const department = document.getElementById("probDept").value;
+  const problem_context = document.getElementById("probContext").value;
+  const desired_outcome = document.getElementById("probOutcome").value;
+  const capabilities_needed = document.getElementById("probCapabilities").value;
   const skills_needed = document.getElementById("probSkills").value;
+  const sector = document.getElementById("probSector").value;
+  const kpis = document.getElementById("probKpi").value;
+  const geography = document.getElementById("probGeography").value;
   const budget_lakh = parseFloat(document.getElementById("probBudget").value) || 25;
 
   const list = document.getElementById("matchList");
@@ -177,7 +187,7 @@ document.getElementById("problemForm").addEventListener("submit", async (e) => {
     const res = await fetch(`${API_BASE}/api/match-startups`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, department, skills_needed, budget_lakh }),
+      body: JSON.stringify({ title, department, problem_context, desired_outcome, capabilities_needed, skills_needed, sector, kpis, geography, budget_lakh }),
     });
     const data = await res.json();
     renderMatches(data.matches);
@@ -188,22 +198,29 @@ document.getElementById("problemForm").addEventListener("submit", async (e) => {
 
 function renderMatches(matches) {
   const list = document.getElementById("matchList");
-  document.getElementById("matchCount").textContent = `${matches.length} matched`;
+  document.getElementById("matchCount").textContent = `${matches.length} candidates`;
   if (!matches.length) {
-    list.innerHTML = `<li class="empty-state">No startups matched these terms yet — try broader skill keywords.</li>`;
+    list.innerHTML = `<li class="empty-state">No relevant startups found in the current registry. Try refining the problem domain.</li>`;
     return;
   }
   list.innerHTML = matches.map(m => {
-    const terms = m.matched_terms.map(t => `<mark>${t}</mark>`).join(", ");
+    const caps = (m.matched_capabilities || m.matched_terms || []).slice(0, 4);
+    const terms = caps.map(t => `<mark>${t}</mark>`).join(" ");
+    const verified = m.dpiit_status === "verified";
+    const evidence = m.verified_evidence_count ?? 0;
     return `
-      <li class="match-item" data-id="${m.startup_id}">
-        ${avatarHtml(m.name, 44)}
-        <span>
-          <div class="match-name">${m.name} ${m.verification_status === "verified" ? "· ✓ verified" : ""}</div>
-          <div class="match-terms">Matched on: ${terms || "—"} · Trust score ${m.current_score.toFixed(1)}</div>
+      <li class="match-item semantic-match-card" data-id="${m.startup_id}">
+        ${avatarHtml(m.name, 50)}
+        <span class="match-main">
+          <div class="match-name">${m.name} ${verified ? '<span class="badge-verify verified">✓ DPIIT verified · demo source</span>' : '<span class="badge-verify">DPIIT ' + (m.dpiit_status || 'unverified') + '</span>'}</div>
+          <div class="match-meta">${m.sector || 'Unspecified sector'} · ${m.location || 'Location not provided'}</div>
+          <div class="match-reason-title">Why this matched</div>
+          <div class="match-terms">${terms || m.why_matched || 'Semantic similarity to the challenge'}</div>
+          <div class="match-evidence">Verified evidence: ${evidence} · Past deployments: ${m.past_deployments_count || 0}</div>
         </span>
         <span class="match-right">
-          <span class="match-score">${m.match_score.toFixed(0)}% fit</span>
+          <span class="match-score">${Number(m.match_score).toFixed(0)}% semantic fit</span>
+          <span class="mini-score">SETU Score ${Number(m.setu_score ?? m.current_score ?? 0).toFixed(1)}</span>
           ${riskBadgeHtml(m.risk_level)}
         </span>
       </li>
@@ -464,7 +481,7 @@ const I18N = {
     faq1q: "Who is eligible to register as a startup?",
     faq1a: "Any DPIIT-recognised startup, or one in the process of recognition, may register. DPIIT recognition removes the usual prior-turnover and past-experience requirements for pilot-stage engagements.",
     faq2q: "How is the match score calculated?",
-    faq2a: "The matching engine compares the skills a problem statement needs against each startup's declared tags. It's a transparent overlap score, not a hidden model — you can see exactly which terms matched.",
+    faq2a: "SETU uses semantic similarity across the complete challenge, then combines capability and sector relevance. The result also shows readable reasons and matched capabilities so an officer can inspect why a startup was surfaced.",
     faq3q: "What happens if a milestone is missed?",
     faq3a: "Funds for a milestone are only released once it is marked delivered and verified. A missed milestone simply withholds that tranche — it does not cancel earlier approved payments.",
     faq4q: "Is my startup's data secure?",

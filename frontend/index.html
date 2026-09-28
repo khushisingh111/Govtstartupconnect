@@ -203,25 +203,45 @@
     <div class="panel form-panel">
       <h2 data-i18n="fileProblemTitle">File a problem statement</h2>
       <form id="problemForm">
-        <label data-i18n="labelTitle">Title
-          <input type="text" id="probTitle" value="Reduce traffic congestion at high-density junctions" required>
+        <label>Challenge title
+          <input type="text" id="probTitle" value="Electricity outage notification platform" required>
         </label>
-        <label data-i18n="labelDept">Department
+        <label>Department
           <select id="probDept">
-            <option data-i18n="deptTransport">Urban Transport</option>
-            <option data-i18n="deptHealth">Public Health</option>
-            <option data-i18n="deptWater">Water &amp; Sanitation</option>
-            <option data-i18n="deptEdu">Education</option>
-            <option data-i18n="deptAgri">Agriculture</option>
+            <option>Energy &amp; Utilities</option>
+            <option>Urban Transport</option>
+            <option>Public Health</option>
+            <option>Water &amp; Sanitation</option>
+            <option>Education</option>
+            <option>Agriculture</option>
+            <option>Urban Development</option>
           </select>
         </label>
-        <label data-i18n="labelSkills">Skills / domain needed
-          <textarea id="probSkills" rows="3" required>computer vision, traffic sensors, IoT, real-time analytics, mobile app</textarea>
+        <label>Problem context
+          <textarea id="probContext" rows="3">Government departments need to detect electricity interruptions in near real time and notify affected citizens while improving visibility into distribution network outages.</textarea>
+        </label>
+        <label>Desired outcome
+          <textarea id="probOutcome" rows="2">Detect power outages quickly and send reliable citizen notifications with utility-level monitoring.</textarea>
+        </label>
+        <label>Capabilities / domain needed
+          <textarea id="probCapabilities" rows="3">Power outage detection, electricity distribution monitoring, utility analytics, smart grid, IoT telemetry, citizen notification</textarea>
+        </label>
+        <label>Additional skills
+          <input type="text" id="probSkills" value="mobile app">
+        </label>
+        <label>Sector
+          <input type="text" id="probSector" value="Energy / Utilities">
+        </label>
+        <label>Target KPI
+          <input type="text" id="probKpi" value="Outage detection latency and notification delivery rate">
+        </label>
+        <label>Geography
+          <input type="text" id="probGeography" value="Maharashtra">
         </label>
         <label data-i18n="labelBudget">Pilot budget ceiling (₹ lakh)
           <input type="number" id="probBudget" value="25">
         </label>
-        <button type="submit" class="btn-primary full" data-i18n="getRecommendations">Get AI recommendations</button>
+        <button type="submit" class="btn-primary full" data-i18n="getRecommendations">Find semantic matches</button>
       </form>
     </div>
 
